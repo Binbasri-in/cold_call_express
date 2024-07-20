@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ campaign.name }}</h2>
+    <p>Status: <span id="campaignStatus">{{ campaign.get_status_display }}</span></p>
+    <p>Company Details: {{ campaign.company_details }}</p>
+    <p>Product/Service: {{ campaign.product_service }}</p>
+    <p>Marketing Keywords: {{ campaign.marketing_keywords }}</p>
+    <p>Starting Pitch: {{ campaign.starting_pitch }}</p>
+
+    <h3>Contacts</h3>
+    {% if contacts %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.phone_number }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>
+                        <a href="{% url 'contact_update' contact.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{% url 'contact_delete' contact.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No contacts added yet.</p>
+    {% endif %}
+
+    <h4>Add New Contact</h4>
+    <form method="post" action="{% url 'contact_create' campaign.pk %}">
+        {% csrf_token %}
+        {{ contact_form.as_p }}
+        <button type="submit" class="btn btn-primary">Add Contact</button>
+    </form>
+
+    <button id="initiateCampaign" class="btn btn-success mt-3" {% if campaign.status != 'draft' or not campaign.starting_pitch or not contacts %}disabled{% endif %}>
+        Initiate Campaign
+    </button>
+
+    <a href="{% url 'campaign_update' campaign.pk %}" class="btn btn-primary mt-3">Edit Campaign</a>
+    <a href="{% url 'campaign_list' %}" class="btn btn-secondary mt-3">Back to Campaigns</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('initiateCampaign').addEventListener('click', function() {
+    fetch('{% url "campaign_initiate" campaign.pk %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+            document.getElementById('campaignStatus').textContent = 'In Progress';
+            this.disabled = true;
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+</script>
+{% endblock %}
