@@ -40,7 +40,7 @@
 <h3>Recent Campaigns</h3>
 <div class="list-group">
     {% for campaign in recent_campaigns %}
-    <a href="{% url 'campaign_update' campaign.id %}" class="list-group-item list-group-item-action">
+    <a href="{% url 'campaign:campaign_update' campaign.id %}" class="list-group-item list-group-item-action">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ campaign.name }}</h5>
             <small>{{ campaign.created_at|date:"F d, Y" }}</small>
@@ -48,7 +48,7 @@
         <p class="mb-1">Interactions: {{ campaign.chatbot_interactions }} | Conversion Rate: {{ campaign.conversion_rate|floatformat:2 }}%</p>
     </a>
     {% empty %}
-    <p>No campaigns yet. <a href="{% url 'campaign_create' %}">Create one now</a>!</p>
+    <p>No campaigns yet. <a href="{% url 'campaign:campaign_create' %}">Create one now</a>!</p>
     {% endfor %}
 </div>
 {% endblock %}

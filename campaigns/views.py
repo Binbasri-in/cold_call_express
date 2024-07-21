@@ -28,7 +28,7 @@ class CampaignCreateView(LoginRequiredMixin, CreateView):
     model = Campaign
     form_class = CampaignForm
     template_name = 'campaigns/campaign_form.html'
-    success_url = reverse_lazy('campaign_list')
+    success_url = reverse_lazy('campaign:campaign_list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -39,13 +39,13 @@ class CampaignUpdateView(LoginRequiredMixin, UpdateView):
     model = Campaign
     form_class = CampaignForm
     template_name = 'campaigns/campaign_form.html'
-    success_url = reverse_lazy('campaign_list')
+    success_url = reverse_lazy('campaign:campaign_list')
 
 
 class CampaignDeleteView(LoginRequiredMixin, DeleteView):
     model = Campaign
     template_name = 'campaigns/campaign_confirm_delete.html'
-    success_url = reverse_lazy('campaign_list')
+    success_url = reverse_lazy('campaign:campaign_list')
 
 
 class CampaignDashboardView(LoginRequiredMixin, TemplateView):
@@ -79,7 +79,7 @@ class GeneratePitchView(LoginRequiredMixin, View):
 
 class CampaignDetailView(LoginRequiredMixin, DetailView):
     model = Campaign
-    template_name = 'campaigns/campaign_detail.html'
+    template_name = 'campaigns/campaign_details.html'
     context_object_name = 'campaign'
 
     def get_context_data(self, **kwargs):
@@ -101,7 +101,7 @@ class ContactCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('campaign_detail', kwargs={'pk': self.kwargs['campaign_pk']})
+        return reverse_lazy('campaign:campaign_details', kwargs={'pk': self.kwargs['campaign_pk']})
 
 
 class ContactUpdateView(LoginRequiredMixin, UpdateView):
@@ -110,7 +110,7 @@ class ContactUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'campaigns/contact_form.html'
 
     def get_success_url(self):
-        return reverse_lazy('campaign_detail', kwargs={'pk': self.object.campaign.pk})
+        return reverse_lazy('campaign:campaign_details', kwargs={'pk': self.object.campaign.pk})
 
 
 class ContactDeleteView(LoginRequiredMixin, DeleteView):
@@ -118,7 +118,7 @@ class ContactDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'campaigns/contact_confirm_delete.html'
 
     def get_success_url(self):
-        return reverse_lazy('campaign_detail', kwargs={'pk': self.object.campaign.pk})
+        return reverse_lazy('campaign:campaign_details', kwargs={'pk': self.object.campaign.pk})
 
 
 class CampaignStatusUpdateView(LoginRequiredMixin, View):
@@ -176,7 +176,7 @@ class CSVUploadView(LoginRequiredMixin, FormView):
             )
         
         messages.success(self.request, 'Contacts uploaded successfully')
-        return redirect('campaign_detail', pk=campaign.pk)
+        return redirect('campaign:campaign_details', pk=campaign.pk)
 
     def form_invalid(self, form):
         messages.error(self.request, 'There was an error uploading the CSV file')

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Your Campaigns</h2>
-    <a href="{% url 'campaign_create' %}" class="btn btn-primary mb-3">Create New Campaign</a>
+    <a href="{% url 'campaign:campaign_create' %}" class="btn btn-primary mb-3">Create New Campaign</a>
     
     {% if campaigns %}
         <table class="table table-striped">
@@ -18,19 +18,20 @@
             <tbody>
                 {% for campaign in campaigns %}
                 <tr>
-                    <td><a href="{% url 'campaign_detail' campaign.pk %}">{{ campaign.name }}</a></td>
+                    <td><a href="{% url 'campaign:campaign_details' campaign.pk %}">{{ campaign.name }}</a></td>
                     <td>{{ campaign.get_status_display }}</td>
                     <td>{{ campaign.created_at|date:"M d, Y" }}</td>
                     <td>
-                        <a href="{% url 'campaign_update' campaign.pk %}" class="btn btn-sm btn-primary">Edit</a>
-                        <a href="{% url 'campaign_delete' campaign.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                        <a href="{% url 'campaign:campaign_update' campaign.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{% url 'chatbot:chatbot_view' campaign.pk%}" class="btn btn-sm btn-info">Chat</a>
+                        <a href="{% url 'campaign:campaign_delete' campaign.pk %}" class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
-        <p>You don't have any campaigns yet. <a href="{% url 'campaign_create' %}">Create one now</a>!</p>
+        <p>You don't have any campaigns yet. <a href="{% url 'campaign:campaign_create' %}">Create one now</a>!</p>
     {% endif %}
 </div>
 {% endblock %}

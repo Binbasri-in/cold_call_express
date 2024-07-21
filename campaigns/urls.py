@@ -6,10 +6,12 @@ from .views import (
     ContactUpdateView, ContactDeleteView, CampaignDetailView, CSVUploadView
 )
 
+app_name = 'campaign'
+
 urlpatterns = [
     path('', CampaignListView.as_view(), name='campaign_list'),
     path('create/', CampaignCreateView.as_view(), name='campaign_create'),
-    path('<int:pk>/', CampaignDetailView.as_view(), name='campaign_detail'),
+    path('<int:pk>/', CampaignDetailView.as_view(), name='campaign_details'),
     path('<int:pk>/update/', CampaignUpdateView.as_view(), name='campaign_update'),
     path('<int:pk>/delete/', CampaignDeleteView.as_view(), name='campaign_delete'),
     path('dashboard/', CampaignDashboardView.as_view(), name='campaign_dashboard'),

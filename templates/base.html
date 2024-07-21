@@ -22,28 +22,28 @@
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'campaign_dashboard' %}">
+                            <a class="nav-link" href="{% url 'campaign:campaign_dashboard' %}">
                                 <i class="fas fa-tachometer-alt"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'campaign_list' %}">
+                            <a class="nav-link" href="{% url 'campaign:campaign_list' %}">
                                 <i class="fas fa-list"></i> Campaigns
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">
+                            <a class="nav-link" href="{% url 'users:logout' %}">
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
+                            <a class="nav-link" href="{% url 'users:login' %}">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'signup' %}">
+                            <a class="nav-link" href="{% url 'users:signup' %}">
                                 <i class="fas fa-user-plus"></i> Sign Up
                             </a>
                         </li>

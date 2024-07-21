@@ -135,7 +135,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-LOGIN_REDIRECT_URL = 'campaign_dashboard'
+LOGIN_REDIRECT_URL = 'campaign:campaign_dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
 DEBUG_TOOLBAR_CONFIG = {

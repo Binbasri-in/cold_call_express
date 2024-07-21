@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const typingIndicator = document.getElementById('typing-indicator');
 
     // Load chat history
-    fetch('{% url "chat_history" campaign.id %}')
+    fetch('{% url "chatbot:chat_history" campaign.id %}')
         .then(response => response.json())
         .then(data => {
             data.messages.forEach(msg => {
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function sendMessage(message) {
         typingIndicator.style.display = 'block';
-        fetch('{% url "chatbot_message" campaign.id %}', {
+        fetch('{% url "chatbot:chatbot_message" campaign.id %}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
