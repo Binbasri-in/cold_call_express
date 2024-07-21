@@ -12,7 +12,7 @@ import io
 
 from .models import Campaign, Contact
 from .forms import CampaignForm, ContactForm, CSVUploadForm
-from .utils import generate_text
+from chatbot.utils import generate_text
 
 
 class CampaignListView(LoginRequiredMixin, ListView):
