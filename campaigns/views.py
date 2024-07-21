@@ -1,13 +1,17 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, FormView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Sum, Avg
 from django.http import JsonResponse
+from django.contrib import messages
+from django.views import View
 import json
+import csv
+import io
 
 from .models import Campaign, Contact
-from .forms import CampaignForm, ContactForm
+from .forms import CampaignForm, ContactForm, CSVUploadForm
 from .utils import generate_text
 
 
@@ -82,8 +86,9 @@ class CampaignDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['contacts'] = self.object.contacts.all()
         context['contact_form'] = ContactForm()
+        context['csv_upload_form'] = CSVUploadForm()
         return context
-    
+
 
 class ContactCreateView(LoginRequiredMixin, CreateView):
     model = Contact
@@ -136,3 +141,43 @@ class InitiateCampaignView(LoginRequiredMixin, View):
             # Here you would integrate with Twilio API to initiate calls
             return JsonResponse({'status': 'success', 'message': 'Campaign initiated'})
         return JsonResponse({'status': 'error', 'message': 'Unable to initiate campaign'}, status=400)
+    
+
+class CSVUploadView(LoginRequiredMixin, FormView):
+    form_class = CSVUploadForm
+    template_name = 'campaigns/csv_upload.html'
+
+    def form_valid(self, form):
+        campaign = get_object_or_404(Campaign, pk=self.kwargs['campaign_pk'])
+        csv_file = form.cleaned_data['csv_file']
+        
+        if not csv_file.name.endswith('.csv'):
+            messages.error(self.request, 'File is not CSV type')
+            return super().form_invalid(form)
+        
+        decoded_file = csv_file.read().decode('utf-8')
+        io_string = io.StringIO(decoded_file)
+        reader = csv.DictReader(io_string)
+        
+        required_columns = ['name', 'phone_number', 'email', 'age', 'gender', 'location']
+        if not all(column in reader.fieldnames for column in required_columns):
+            messages.error(self.request, 'CSV file does not have all required columns')
+            return super().form_invalid(form)
+        
+        for row in reader:
+            Contact.objects.create(
+                campaign=campaign,
+                name=row['name'],
+                phone_number=row['phone_number'],
+                email=row['email'],
+                age=row['age'] if row['age'] else None,
+                gender=row['gender'],
+                location=row['location']
+            )
+        
+        messages.success(self.request, 'Contacts uploaded successfully')
+        return redirect('campaign_detail', pk=campaign.pk)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'There was an error uploading the CSV file')
+        return super().form_invalid(form)

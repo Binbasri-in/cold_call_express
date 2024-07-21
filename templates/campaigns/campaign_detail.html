@@ -45,6 +45,13 @@
         <button type="submit" class="btn btn-primary">Add Contact</button>
     </form>
 
+    <h4 class="mt-4">Upload Contacts from CSV</h4>
+    <form method="post" action="{% url 'csv_upload' campaign.pk %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ csv_upload_form.as_p }}
+        <button type="submit" class="btn btn-primary">Upload CSV</button>
+    </form>
+
     <button id="initiateCampaign" class="btn btn-success mt-3" {% if campaign.status != 'draft' or not campaign.starting_pitch or not contacts %}disabled{% endif %}>
         Initiate Campaign
     </button>

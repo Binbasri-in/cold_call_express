@@ -3,7 +3,7 @@ from .views import (
     CampaignListView, CampaignCreateView, CampaignUpdateView, 
     CampaignDeleteView,CampaignDashboardView, GeneratePitchView,
     CampaignStatusUpdateView, InitiateCampaignView, ContactCreateView,
-    ContactUpdateView, ContactDeleteView, CampaignDetailView
+    ContactUpdateView, ContactDeleteView, CampaignDetailView, CSVUploadView
 )
 
 urlpatterns = [
@@ -19,5 +19,5 @@ urlpatterns = [
     path('<int:campaign_pk>/contact/add/', ContactCreateView.as_view(), name='contact_create'),
     path('contact/<int:pk>/update/', ContactUpdateView.as_view(), name='contact_update'),
     path('contact/<int:pk>/delete/', ContactDeleteView.as_view(), name='contact_delete'),
-
+    path('<int:campaign_pk>/upload-csv/', CSVUploadView.as_view(), name='csv_upload'),
 ]
