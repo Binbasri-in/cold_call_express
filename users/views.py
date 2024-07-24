@@ -12,7 +12,7 @@ from django.views.generic.base import View
 
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('users:login')
     template_name = 'users/signup.html'
 
 class CustomLoginView(LoginView):
@@ -30,7 +30,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = 'users/profile_update.html'
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('users:profile')
 
     def get_object(self, queryset=None):
         return self.request.user.profile
