@@ -16,6 +16,15 @@
     <p><strong>Product/Service:</strong>  {{ campaign.product_service }}</p>
     <p><strong>Marketing Keywords:</strong>  {{ campaign.marketing_keywords }}</p>
     <p><strong>Starting Pitch:</strong>  {{ campaign.starting_pitch }}</p>
+    
+    <!-- Toggle Button or Select Option for Adding the Pitch -->
+    <div class="form-group m-3">
+        <label for="addPitchOption"><strong>Include Starting Pitch:</strong></label>
+        <select id="addPitchOption" class="form-control w-50">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </div>
 
     <h3>Contacts</h3>
     {% if contacts %}
@@ -25,6 +34,8 @@
                     <th>Name</th>
                     <th>Phone Number</th>
                     <th>Email</th>
+                    <th>status</th>
+                    <th>Recording</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -34,9 +45,12 @@
                     <td>{{ contact.name }}</td>
                     <td>{{ contact.phone_number }}</td>
                     <td>{{ contact.email }}</td>
+                    <td>-</td>
+                    <td>-</td>
                     <td>
                         <a href="{% url 'campaign:contact_update' contact.pk %}" class="btn btn-sm btn-primary">Edit</a>
                         <a href="{% url 'campaign:contact_delete' contact.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                        <button class="btn btn-sm btn-success" onClick="{{contac.name}}()">Call</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -67,11 +81,14 @@
 {% block extra_js %}
 <script>
 document.getElementById('initiateCampaign').addEventListener('click', function() {
+    const addPitch = document.getElementById('addPitchOption').value;
+    
     fetch('{% url "campaign:campaign_initiate" campaign.pk %}', {
         method: 'POST',
         headers: {
             'X-CSRFToken': '{{ csrf_token }}',
         },
+        body: JSON.stringify({ add_pitch: addPitch })
     })
     .then(response => response.json())
     .then(data => {
@@ -87,6 +104,39 @@ document.getElementById('initiateCampaign').addEventListener('click', function()
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
     });
+
+    sendPostRequest("+917760735073", "Mohammed Ali")
 });
+
+// Function to send the POST request with form data
+function sendPostRequest(phoneNumber, customerName) {
+    let formData = new FormData();
+    formData.append('phone_number', phoneNumber);
+    formData.append('customer_name', customerName);
+    
+    fetch('https://632a-49-206-7-91.ngrok-free.app/call', {
+        method: 'POST',
+        body: formData,  // Send form data
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+            document.getElementById('campaignStatus').textContent = 'In Progress';
+            document.getElementById('initiateCampaign').disabled = true;
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+}
+
+function call_row() {
+    const phoneNumber = document.getElementById()
+}
+
 </script>
 {% endblock %}

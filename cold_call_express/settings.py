@@ -29,7 +29,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -161,7 +161,11 @@ DEBUG_TOOLBAR_CONFIG = {
 # }
 
 ## Cloudflare settings
-CLOUDFLARE_MODEL = "@cf/openchat/openchat-3.5-0106"
+CLOUDFLARE_MODEL = "@cf/meta/llama-2-7b-chat-fp16"
 CLOUDFLARE_URL = f"https://api.cloudflare.com/client/v4/accounts/{os.environ['CLOUDFLARE_ACCOUNT_ID']}/ai/run/{CLOUDFLARE_MODEL}"
 CLOUDFLARE_API_TOKEN = os.environ['CLOUDFLARE_API_TOKEN']
 
+TWILIO_ACCOUNT_SID = 'ACfc65da562b3b75c32af8b7301366e964'
+TWILIO_AUTH_TOKEN = '60802119136daf8e34b103ce2e54f1f7'
+TWILIO_PHONE_NUMBER = 'your_twilio_phone_number'
+BASE_URL = 'https://your-domain.com'  # Used for Twilio callbacks

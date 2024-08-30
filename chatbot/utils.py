@@ -19,14 +19,15 @@ def generate_bot_response(campaign, user_message, conversation_history, language
         Marketing Keywords: {campaign.marketing_keywords}
 
         Always be polite and professional. If asked about personal information or topics unrelated to the campaign, politely redirect the conversation back to the product or service.
-
-        Previous conversation:
-        {conversation_context}
+        IMPORTANT: Be concise and engaging in your responses. End each response with a short question to keep the conversation going. Keep your response under 100 characters.
+        Don't use any asterisks (*) or special characters in your responses. just text.
+        
+       
 
         Human: {user_message}
         AI:"""
         try:
-            data = {'prompt': prompt, 'max_tokens': 100, 'temperature': 0.3}
+            data = {'prompt': prompt, 'max_tokens': 50, 'temperature': 0.1}
             response = requests.post(cloudflare_url, headers={'Authorization': f"Bearer {settings.CLOUDFLARE_API_TOKEN}"},
                                     data=json.dumps(data)).json()
             print(response["result"]["response"])
@@ -56,7 +57,7 @@ def generate_text(company_details, product_service, marketing_keywords, language
             your name is Sara, now you are calling him, what would you say? (make sure to make your pitch concise, and end it with a question) make sure your response is very short
             Sara:
             """
-            data = {'prompt': prompt, 'max_tokens': 100}
+            data = {'prompt': prompt, 'max_tokens': 40}
             response = requests.post(cloudflare_url, headers={'Authorization': f"Bearer {settings.CLOUDFLARE_API_TOKEN}"},
                                     data=json.dumps(data)).json()
             
